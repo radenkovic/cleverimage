@@ -1,11 +1,13 @@
-# import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as pyplot
 from mtcnn.mtcnn import MTCNN
+from PIL import Image
 
 detector = MTCNN()
 
-def face_detect(url, confidence = 0.8):
+def face_detect(image, confidence = 0.8):
     # load the image
-    pixels = pyplot.imread(url)
+    pixels = pyplot.imread(image)
+
     # detect faces in the image
     faces = detector.detect_faces(pixels)
 
@@ -17,7 +19,6 @@ def face_detect(url, confidence = 0.8):
             print('Skipping recognized face, confidence too low')
             continue
             
-        
         # Create coordinates    
         x1, y1, width, height = face['box']
         x2, y2 = x1 + width, y1 + height

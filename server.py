@@ -1,16 +1,27 @@
 # Todo Bottle REST API
-from bottle import route, run
+from bottle import route, run, Response, request
+from time import perf_counter 
 import os
 from src.face_detect import face_detect
 
 
 
-@route('/face-detect')
+@route('/face-detect', method='post')
 def index():
-    # TODO load image multipart and switch to POST
-    result = face_detect('samples/4.jpg')
-    # TODO format response
-    return {'endpoint': 'face-detect', 'success': True, 'data': result}
+    upload = request.files.get('image')
+    name, ext = os.path.splitext(upload.filename)
+    print('File extension', upload)
+    if ext.lower() not in ('.jpg', '.jpeg'):
+        Response.status = 400 # set to BadRequest
+        return { 'success': False, 'message': "Only .jpg and .jpeg fiels are allowed."}
+    
+    
+    print('image uploaded')
+    t1_start = perf_counter()  
+    result = face_detect(upload.file)
+    t1_stop = perf_counter() 
+    print('face detection took (seconds):', t1_stop - t1_start)
+    return {'endpoint': '/face-detect', 'success': True, 'data': result}
 
 
 # ENV Variables
