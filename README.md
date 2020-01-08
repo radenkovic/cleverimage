@@ -60,3 +60,4 @@ Detects faces in uploaded image.
 - Cleanup the requirements (remove yolo model)
 - ~~Bottle image upload (multipart)~~
 - Resize uploaded image (test for performance)
+- Allow sending image URL

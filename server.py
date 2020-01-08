@@ -3,16 +3,12 @@ from bottle import route, run, Response, request
 from time import perf_counter 
 import os
 from src.face_detect import face_detect
-
+import requests
 
 # ENV Variables
 IS_PRODUCTION = os.environ.get('ENV', None) == 'production'
 PORT = os.environ.get('PORT', 8080)
 FACE_DETECT_CONFIDENCE = os.environ.get('FACE_DETECT_CONFIDENCE', 0.8)
-
-
-
-
 
 # ROUTES
 @route('/face-detect', method='post')
@@ -20,10 +16,14 @@ def index():
     upload = request.files.get('image')
     name, ext = os.path.splitext(upload.filename)
     print('File extension', upload)
+    
+    # Request -- TODO ALLOW Fetching from URL instead of uploading
+    # response = requests.get('http://radenkovic.org/diary/sanda1.jpg', stream=True)
+    # response.raw.decode_content = True
+    
     if ext.lower() not in ('.jpg', '.jpeg'):
         Response.status = 400 # set to BadRequest
         return { 'success': False, 'message': "Only .jpg and .jpeg fiels are allowed."}
-    
     
     print('image uploaded')
     t1_start = perf_counter()  

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as pyplot
 from mtcnn.mtcnn import MTCNN
-from PIL import Image
 
 detector = MTCNN()
 
