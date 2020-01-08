@@ -1,12 +1,9 @@
-import matplotlib.pyplot as pyplot
+# import matplotlib.pyplot as pyplot
 from mtcnn.mtcnn import MTCNN
-from PIL import Image
-from numpy import asarray
 
 detector = MTCNN()
 
-
-def face_detect(url):
+def face_detect(url, confidence = 0.8):
     # load the image
     pixels = pyplot.imread(url)
     # detect faces in the image
@@ -14,16 +11,24 @@ def face_detect(url):
 
     # extract the bounding box from the first face
     list = []
-    for face in faces:
-        print(face)
-        if face['confidence'] < 0.9:
+    for num, face in enumerate(faces, start = 1):
+        # print(face)
+        if face['confidence'] < confidence:
             print('Skipping recognized face, confidence too low')
             continue
+            
+        
+        # Create coordinates    
         x1, y1, width, height = face['box']
         x2, y2 = x1 + width, y1 + height
         face['coordinates'] = { 'x': [x1, x2], 'y': [y1, y2]}
+        
+        # NOTE: simple writing to file
+        # folder, file = url.split('/')
+        # to_write = pixels[y1:y2, x1:x2]
+        # pyplot.imsave('test/'+str(num)+file, to_write)
         list.append(face)
-    print('Found faces:', list)
-    return list
+        
+    # print('Found faces:', list)
+    return faces
 
-face_detect("samples/1.jpg")
