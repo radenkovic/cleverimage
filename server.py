@@ -5,7 +5,16 @@ import os
 from src.face_detect import face_detect
 
 
+# ENV Variables
+IS_PRODUCTION = os.environ.get('ENV', None) == 'production'
+PORT = os.environ.get('PORT', 8080)
+FACE_DETECT_CONFIDENCE = os.environ.get('FACE_DETECT_CONFIDENCE', 0.8)
 
+
+
+
+
+# ROUTES
 @route('/face-detect', method='post')
 def index():
     upload = request.files.get('image')
@@ -18,15 +27,11 @@ def index():
     
     print('image uploaded')
     t1_start = perf_counter()  
-    result = face_detect(upload.file)
+    result = face_detect(upload.file, confidence=FACE_DETECT_CONFIDENCE)
     t1_stop = perf_counter() 
     print('face detection took (seconds):', t1_stop - t1_start)
     return {'endpoint': '/face-detect', 'success': True, 'data': result}
 
-
-# ENV Variables
-IS_PRODUCTION = os.environ.get('ENV', None) == 'production'
-PORT = os.environ.get('PORT', 8080)
 
 # Production server
 if IS_PRODUCTION:
